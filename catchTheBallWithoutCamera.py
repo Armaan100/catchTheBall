@@ -20,12 +20,17 @@ clock = pygame.time.Clock()
 background_image = pygame.image.load('./Resources/background.jpg').convert()
 background_image = pygame.transform.scale(background_image, (width, height))
 
-# Load and Resize Ball Image
+# Load Images
+
+# Load and resize the ball image
 imgBalloon = pygame.image.load('./Resources/redBall.png').convert_alpha()
-imgBalloon = pygame.transform.scale(imgBalloon, (60, 60))  # Smaller ball size
+
+
+imgBalloon = pygame.transform.scale(imgBalloon, (100, 80))
 
 # Get the rect for the resized image
 rectBalloon = imgBalloon.get_rect()
+
 
 # Variables
 speed = 6
@@ -34,7 +39,7 @@ rect_width = 200
 rect_height = 50
 rect_x = (width - rect_width) // 2
 rect_y = height - rect_height
-speed_rect = 20  # Slower catcher movement (reduce from 50 to 20)
+speed_rect = 50
 flag = 0
 
 # Load and Play Background Music
@@ -50,8 +55,8 @@ cap.set(3, 1280)  # width
 cap.set(4, 720)  # height
 
 def resetBalloon():
-    rectBalloon.x = random.randint(100, width - 100)
-    rectBalloon.y = -50  # Start above the screen
+    rectBalloon.x = random.randint(100, img.shape[1]-100)
+    rectBalloon.y = img.shape[0] - height + 50
 
 def show_start_menu():
     start = True
@@ -98,25 +103,33 @@ while start:
     # Hand Detection Logic
     if hands:
         hand_type = hands[0]["type"]
-        if hand_type == "Right" and rect_x < width - rect_width:
-            rect_x += speed_rect  # Slower movement to the right
+        if hand_type == "Right" and rect_x < width-rect_width+10:
+            rect_x += speed_rect
         elif hand_type == "Left" and rect_x > 0:
-            rect_x -= speed_rect  # Slower movement to the left
+            rect_x -= speed_rect
 
     rectBalloon.y += speed
 
     # Collision Detection
-    if flag == 0 and rectBalloon.y <= rect_y + 50 and rectBalloon.y >= rect_y - 5 and rectBalloon.x >= rect_x and rectBalloon.x < rect_x + rect_width:
+    if flag == 0 and rectBalloon.y <= rect_y+50 and rectBalloon.y >= rect_y - 5 and rectBalloon.x >= rect_x and rectBalloon.x < rect_x + rect_width:
         score += 1
         pygame.mixer.Channel(1).play(pygame.mixer.Sound('./Resources/score_increase.mp3'))
-        speed += 1  # Speed only increases when the score increases
+        speed += 1
         flag = 1
     
     if rectBalloon.y > height:
         flag = 0
         resetBalloon()
+        speed += 1
 
-    # Draw Game Elements (Without Showing Camera Feed)
+    # Convert OpenCV Image to Pygame Surface
+    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    imgRGB = np.rot90(imgRGB)
+    frame = pygame.surfarray.make_surface(imgRGB).convert()
+    frame = pygame.transform.flip(frame, True, False)
+    window.blit(frame, (0, 0))
+
+    # Draw Game Elements
     window.blit(imgBalloon, rectBalloon)
     pygame.draw.rect(window, (0, 0, 0), (rect_x, rect_y, rect_width, rect_height))
 
