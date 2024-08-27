@@ -3,6 +3,7 @@ import pygame
 import cv2
 import numpy as np
 from cvzone.HandTrackingModule import HandDetector
+import time
 
 pygame.init()
 
@@ -84,9 +85,38 @@ def show_start_menu():
 show_start_menu()
 
 
-try:
+# End Screen
+def show_end_menu(final_score):
+    pygame.mixer.Channel(0).stop()
     start = True
     while start:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                start = False
+                pygame.quit()
+                quit()
+
+        window.blit(background_image, (0, 0))
+        text_score = font.render(f'Your score is: {str(final_score)}', True, (255, 255, 255))
+        window.blit(text_score, (500, 300))
+
+        text_click = font.render(f'Click anywhere to exit', True, (255, 255, 255))
+        window.blit(text_click, (450, 350))
+
+        pygame.display.update()
+
+try:
+    start = True
+    
+    start_time = time.time()
+    initial_time = 10
+    
+    while start:
+        current_time = int(initial_time-(time.time() - start_time))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 start = False  # Exit the loop to quit the game
@@ -125,6 +155,15 @@ try:
         font = pygame.font.Font(None, 50)
         text_score = font.render(str(score), True, (50, 50, 50))
         window.blit(text_score, (20, 20))
+        
+        #Display Timer
+        font = pygame.font.Font(None, 50)
+        text_timer = font.render(f'Time Remaining: {str(current_time)}', True, (50, 50, 50))
+        window.blit(text_timer, (900, 20))
+
+        # Finish Game
+        if current_time == 0:
+            show_end_menu(score)
 
         pygame.display.update()
         clock.tick(fps)
