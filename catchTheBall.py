@@ -112,7 +112,7 @@ try:
     start = True
     
     start_time = time.time()
-    initial_time = 10
+    initial_time = 30
     
     while start:
         current_time = int(initial_time-(time.time() - start_time))
@@ -159,7 +159,7 @@ try:
         #Display Timer
         font = pygame.font.Font(None, 50)
         text_timer = font.render(f'Time Remaining: {str(current_time)}', True, (50, 50, 50))
-        window.blit(text_timer, (900, 20))
+        window.blit(text_timer, (475, 20))
 
         # Finish Game
         if current_time == 0:
