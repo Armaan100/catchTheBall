@@ -29,7 +29,7 @@ rectHoop.y = height - rectHoop.height
 
 society_logo = pygame.image.load('./Resources/ACM logo.png').convert_alpha()
 society_logo = pygame.transform.scale(society_logo, (200, 100))
-logo_padding = 20
+logo_padding = 10
 logo_rect = society_logo.get_rect(topright=(width - logo_padding, logo_padding))
 
 speed = 6
@@ -119,11 +119,11 @@ try:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                start = False  # Exit the loop to quit the game
+                start = False  
 
-        # Your game logic and rendering code here
+        
         window.blit(background_image, (0, 0))
-        window.blit(society_logo, logo_rect)  # Display the society logo
+        window.blit(society_logo, logo_rect)  
 
         success, img = cap.read()
         img = cv2.flip(img, 1)
@@ -132,17 +132,17 @@ try:
         if hands:
             hand_type = hands[0]["type"]
             if hand_type == "Right" and rectHoop.x < width - rectHoop.width:
-                rectHoop.x += speed_hoop  # Move the hoop to the right
+                rectHoop.x += speed_hoop  
             elif hand_type == "Left" and rectHoop.x > 0:
-                rectHoop.x -= speed_hoop  # Move the hoop to the left
+                rectHoop.x -= speed_hoop  
 
         rectBalloon.y += speed
 
-        # Collision detection without making the ball disappear
+        
         if flag == 0 and rectBalloon.colliderect(rectHoop):
             score += 1
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('./Resources/score_increase.mp3'))
-            speed += 1  # Increase the balloon speed as the score increases
+            speed += 1  
             flag = 1
         
         if rectBalloon.y > height:
@@ -150,18 +150,18 @@ try:
             resetBalloon()
 
         window.blit(imgBalloon, rectBalloon)
-        window.blit(imgHoop, rectHoop)  # Draw the hoop at the bottom of the screen
+        window.blit(imgHoop, rectHoop)  
 
         font = pygame.font.Font(None, 50)
         text_score = font.render(str(score), True, (50, 50, 50))
         window.blit(text_score, (20, 20))
         
-        #Display Timer
+        
         font = pygame.font.Font(None, 50)
         text_timer = font.render(f'Time Remaining: {str(current_time)}', True, (50, 50, 50))
-        window.blit(text_timer, (475, 20))
+        window.blit(text_timer, (475, 30))
 
-        # Finish Game
+        
         if current_time == 0:
             show_end_menu(score)
 
