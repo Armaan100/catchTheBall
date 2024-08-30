@@ -85,7 +85,6 @@ def show_start_menu():
 show_start_menu()
 
 
-# End Screen
 def show_end_menu(final_score):
     pygame.mixer.Channel(0).stop()
     start = True
@@ -112,7 +111,7 @@ try:
     start = True
     
     start_time = time.time()
-    initial_time = 30
+    initial_time = 45
     
     while start:
         current_time = int(initial_time-(time.time() - start_time))
